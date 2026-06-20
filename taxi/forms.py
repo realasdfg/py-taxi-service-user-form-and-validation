@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
 from taxi.models import Driver, Car
@@ -30,20 +31,20 @@ class LicenseNumberValidationMixin:
 
 class DriverForm(LicenseNumberValidationMixin, UserCreationForm):
     class Meta:
-        model = Driver
+        model = get_user_model()
         fields = UserCreationForm.Meta.fields + ("license_number",)
 
 
 class DriverLicenseUpdateForm(LicenseNumberValidationMixin, forms.ModelForm):
     class Meta:
-        model = Driver
+        model = get_user_model()
         fields = ("license_number",)
 
 
 class CarForm(forms.ModelForm):
     drivers = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=Driver.objects.all(),
+        queryset=get_user_model().objects.all(),
     )
 
     class Meta:
